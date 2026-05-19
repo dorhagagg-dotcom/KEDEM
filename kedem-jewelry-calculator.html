@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קדם תכשיטים | הצעת מחיר</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Heebo:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:#C9973A;--gold-light:#E8C87A;--gold-dark:#7A5A1A;
+    --deep:#0A0906;--surface:#110F0B;--card:#161410;
+    --border:#2E2618;--border-gold:#4A3B1E;--text:#F0E6D0;--muted:#7A6E58;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--deep);color:var(--text);font-family:'Heebo',sans-serif;font-weight:300;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 1rem 3rem;
+    background-image:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(201,151,58,.08) 0%,transparent 60%),
+    radial-gradient(ellipse at 10% 90%,rgba(201,151,58,.03) 0%,transparent 50%)}
+  .brand-header{width:100%;max-width:600px;text-align:center;padding:2.8rem 1rem 2rem}
+  .brand-header::after{content:'';display:block;width:60%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:1.6rem auto 0;opacity:.5}
+  .logo-diamond{display:inline-block;margin-bottom:1rem}
+  .logo-diamond svg{width:48px;height:48px;filter:drop-shadow(0 0 12px rgba(201,151,58,.4))}
+  .brand-name{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.8rem;
+    letter-spacing:.18em;color:var(--gold-light);line-height:1;text-transform:uppercase}
+  .brand-name span{display:block;font-size:1rem;letter-spacing:.45em;color:var(--muted);margin-top:.35rem;font-weight:200}
+  .main{width:100%;max-width:600px}
+  .card{background:var(--card);border:1px solid var(--border);margin-bottom:.9rem;
+    padding:1.6rem 1.8rem;position:relative;overflow:hidden}
+  .card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.3}
+  .section-tag{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);
+    margin-bottom:1.2rem;font-family:'Cormorant Garamond',serif;display:flex;align-items:center;gap:.6rem}
+  .section-tag::before{content:'◆';font-size:.45rem;opacity:.7}
+  .section-tag::after{content:'';flex:1;height:1px;background:var(--border)}
+  .field{margin-bottom:1.1rem}.field:last-child{margin-bottom:0}
+  label{display:block;font-size:.73rem;color:var(--muted);margin-bottom:.38rem;letter-spacing:.04em}
+  input[type=number]{width:100%;background:var(--surface);border:1px solid var(--border);
+    color:var(--text);font-family:'Heebo',sans-serif;font-size:1rem;font-weight:400;
+    padding:.6rem .85rem;outline:none;transition:border-color .2s,box-shadow .2s;
+    -moz-appearance:textfield;appearance:textfield;border-radius:0}
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+  input[type=number]:focus{border-color:var(--gold-dark);box-shadow:0 0 0 2px rgba(201,151,58,.1)}
+  input[type=number]::placeholder{color:#2E2618}
+  .toggle-group{display:grid;gap:.5rem;margin-top:.4rem}
+  .toggle-group.cols-2{grid-template-columns:1fr 1fr}
+  .toggle-group.cols-3{grid-template-columns:1fr 1fr 1fr}
+  .toggle-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);
+    font-family:'Heebo',sans-serif;font-size:.78rem;padding:.55rem .3rem;cursor:pointer;
+    transition:all .2s;text-align:center;border-radius:0;line-height:1.4}
+  .toggle-btn:hover{border-color:var(--gold-dark);color:var(--text)}
+  .toggle-btn.active{background:rgba(201,151,58,.08);border-color:var(--gold);color:var(--gold-light)}
+  .notice{background:rgba(201,151,58,.07);border:1px solid var(--gold-dark);padding:.7rem .9rem;
+    font-size:.78rem;color:var(--gold-light);margin-bottom:.9rem;line-height:1.5}
+  .rate-badge{display:flex;align-items:center;justify-content:space-between;
+    background:rgba(201,151,58,.05);border:1px solid var(--border-gold);
+    padding:.55rem .9rem;margin-bottom:1.2rem;font-size:.72rem;color:var(--muted)}
+  .rate-badge .rate-val{color:var(--gold-light);font-weight:400;font-size:.78rem}
+  .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5A9A5A;
+    margin-left:5px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .btn-calc{width:100%;background:transparent;border:1px solid var(--gold);color:var(--gold-light);
+    font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1rem;letter-spacing:.3em;
+    padding:1rem;cursor:pointer;transition:all .25s;text-transform:uppercase;margin-top:.4rem;border-radius:0}
+  .btn-calc:hover{letter-spacing:.4em;box-shadow:0 0 24px rgba(201,151,58,.18);background:rgba(201,151,58,.06)}
+  .btn-calc:active{transform:scale(.998)}
+  .error-msg{display:none;color:#D07070;font-size:.75rem;text-align:center;
+    padding:.5rem;border:1px solid rgba(200,80,80,.2);background:rgba(200,80,80,.05);margin-top:.6rem}
+  .error-msg.show{display:block}
+  .hidden{display:none!important}
+  .result-card{background:var(--card);border:1px solid var(--gold-dark);padding:1.8rem;
+    margin-top:1rem;display:none;animation:fadeUp .45s ease;position:relative;overflow:hidden}
+  .result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold-light),transparent)}
+  .result-card.show{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .result-header{font-family:'Cormorant Garamond',serif;font-size:.6rem;letter-spacing:.35em;
+    color:var(--gold);text-transform:uppercase;margin-bottom:1.4rem;text-align:center}
+  .result-line{display:flex;justify-content:space-between;align-items:baseline;
+    padding:.5rem 0;border-bottom:1px solid rgba(46,38,24,.7);font-size:.82rem}
+  .result-line:last-of-type{border-bottom:none}
+  .r-label{color:var(--muted)}.r-value{color:var(--text)}
+  .total-block{margin-top:1.2rem;padding:1.2rem 1rem;background:rgba(201,151,58,.05);
+    border:1px solid var(--gold-dark);text-align:center;position:relative}
+  .total-block::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .total-label{font-family:'Cormorant Garamond',serif;font-size:.65rem;letter-spacing:.3em;
+    color:var(--gold);text-transform:uppercase;margin-bottom:.4rem}
+  .total-amount{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:600;
+    color:var(--gold-light);line-height:1}
+  .total-sub{font-size:.7rem;color:var(--muted);margin-top:.35rem;letter-spacing:.05em}
+  .page-footer{text-align:center;color:var(--border-gold);font-size:.62rem;
+    letter-spacing:.15em;margin-top:2.5rem;text-transform:uppercase}
+</style>
+</head>
+<body>
+<header class="brand-header">
+  <div class="logo-diamond">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="24,2 44,16 44,32 24,46 4,32 4,16" stroke="#C9973A" stroke-width="1" fill="none" opacity="0.4"/>
+      <polygon points="24,6 40,17 40,31 24,42 8,31 8,17" stroke="#E8C87A" stroke-width="0.6" fill="none" opacity="0.6"/>
+      <polygon points="24,10 36,19 36,29 24,38 12,29 12,19" fill="rgba(201,151,58,0.12)" stroke="#C9973A" stroke-width="0.8"/>
+      <line x1="24" y1="10" x2="12" y2="19" stroke="#E8C87A" stroke-width="0.5" opacity="0.5"/>
+      <line x1="24" y1="10" x2="36" y2="19" stroke="#E8C87A" stroke-width="0.5" opacity="0.5"/>
+      <line x1="12" y1="19" x2="24" y2="22" stroke="#E8C87A" stroke-width="0.5" opacity="0.5"/>
+      <line x1="36" y1="19" x2="24" y2="22" stroke="#E8C87A" stroke-width="0.5" opacity="0.5"/>
+      <line x1="24" y1="22" x2="24" y2="38" stroke="#C9973A" stroke-width="0.5" opacity="0.4"/>
+    </svg>
+  </div>
+  <div class="brand-name">KEDEM<span>Jewelry &middot; קדם תכשיטים</span></div>
+</header>
+
+<main class="main">
+
+  <div class="rate-badge">
+    <span>שער דולר</span>
+    <span class="rate-val" id="rateBadge">טוען...</span>
+    <span><span class="dot"></span>בנק ישראל</span>
+  </div>
+
+  <!-- STEP 1: TYPE -->
+  <div class="card" id="stepType">
+    <div class="section-tag">סוג תכשיט</div>
+    <div class="toggle-group cols-2">
+      <button class="toggle-btn" id="typeRing"      onclick="selectType('ring',this)">טבעת יהלום</button>
+      <button class="toggle-btn" id="typeEarrings"  onclick="selectType('earrings',this)">עגילי יהלום סוליטר</button>
+      <button class="toggle-btn" id="typeBracelet"  onclick="selectType('bracelet',this)">צמיד טניס יהלומים</button>
+      <button class="toggle-btn" id="typeNecklace"  onclick="selectType('necklace',this)">שרשרת יהלום</button>
+      <button class="toggle-btn" id="typeCollier"   onclick="selectType('collier',this)" style="grid-column:span 2">קולייר יהלומים</button>
+    </div>
+  </div>
+
+  <!-- RING -->
+  <div id="secRing" class="hidden">
+    <div class="card">
+      <div class="section-tag">סוג טבעת</div>
+      <div class="toggle-group cols-3">
+        <button class="toggle-btn" id="ringTypeSol"     onclick="selectRingType('solitaire',this)">סוליטר חלקה</button>
+        <button class="toggle-btn" id="ringTypeSolSide" onclick="selectRingType('solitaire_side',this)">סוליטר + שיבוצי צד</button>
+        <button class="toggle-btn" id="ringTypeRow"     onclick="selectRingType('row',this)">טבעת שורה</button>
+      </div>
+    </div>
+
+    <div id="secRingSol" class="hidden">
+      <div class="card">
+        <div class="section-tag">פרטי טבעת סוליטר</div>
+        <div class="field"><label>קראט אבן מרכזית</label>
+          <input type="number" id="rsSolCarat" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="field"><label>מידת טבעת</label>
+          <input type="number" id="rsSolSize" placeholder="למשל 52" min="40" max="80" step="1"></div>
+      </div>
+    </div>
+
+    <div id="secRingSolSide" class="hidden">
+      <div class="card">
+        <div class="section-tag">פרטי טבעת סוליטר + שיבוצי צד</div>
+        <div class="field"><label>קראט אבן מרכזית</label>
+          <input type="number" id="rsSolSideCarat" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="field"><label>מידת טבעת</label>
+          <input type="number" id="rsSolSideSize" placeholder="למשל 52" min="40" max="80" step="1"></div>
+        <div class="field"><label>סוג שיבוצי צד</label>
+          <div class="toggle-group cols-2">
+            <button class="toggle-btn active" id="sideShapeR" onclick="setT('sideShape','round','sideShapeR','sideShapeF')">עגולות</button>
+            <button class="toggle-btn" id="sideShapeF"        onclick="setT('sideShape','fancy','sideShapeR','sideShapeF')">פנטזי</button>
+          </div></div>
+        <div class="field"><label>קראט שיבוצי צד סה"כ</label>
+          <input type="number" id="rsSolSideSideCarat" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="field"><label>מספר אבני צד</label>
+          <input type="number" id="rsSolSideSideCount" placeholder="0" min="0" step="1"></div>
+      </div>
+    </div>
+
+    <div id="secRingRow" class="hidden">
+      <div class="card">
+        <div class="section-tag">פרטי טבעת שורה</div>
+        <div class="field"><label>סוג אבנות</label>
+          <div class="toggle-group cols-2">
+            <button class="toggle-btn active" id="rowShapeR" onclick="setT('rowShape','round','rowShapeR','rowShapeF')">עגולות</button>
+            <button class="toggle-btn" id="rowShapeF"        onclick="setT('rowShape','fancy','rowShapeR','rowShapeF')">פנטזי</button>
+          </div></div>
+        <div class="field"><label>קראט סה"כ בטבעת</label>
+          <input type="number" id="rsRowCarat" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="field"><label>מספר אבנות</label>
+          <input type="number" id="rsRowCount" placeholder="0" min="0" step="1"></div>
+        <div class="field"><label>מידת טבעת</label>
+          <input type="number" id="rsRowSize" placeholder="למשל 52" min="40" max="80" step="1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EARRINGS -->
+  <div id="secEarrings" class="hidden">
+    <div class="notice">&#9830; שים לב &mdash; מדובר בזוג עגילים, עגיל לכל אוזן</div>
+    <div class="card">
+      <div class="section-tag">פרטי עגילי סוליטר</div>
+      <div class="field"><label>קראט לכל עגיל (לאוזן אחת)</label>
+        <input type="number" id="earCarat" placeholder="0.00" min="0" step="0.01" oninput="onEarCaratChange()"></div>
+      <div class="field hidden" id="fieldIGI">
+        <label>תעודת IGI</label>
+        <div class="toggle-group cols-2">
+          <button class="toggle-btn active" id="earIgiY" onclick="setT('earIGI','yes','earIgiY','earIgiN')">עם IGI</button>
+          <button class="toggle-btn" id="earIgiN"        onclick="setT('earIGI','no','earIgiY','earIgiN')">בלי IGI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRACELET -->
+  <div id="secBracelet" class="hidden">
+    <div class="card">
+      <div class="section-tag">פרטי צמיד טניס</div>
+      <div class="field"><label>משקל הצמיד (גרם)</label>
+        <input type="number" id="brGrams" placeholder="0" min="0" step="0.1"></div>
+      <div class="field"><label>קראט יהלומים סה"כ</label>
+        <input type="number" id="brCarat" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="field"><label>מספר אבנות</label>
+        <input type="number" id="brCount" placeholder="0" min="0" step="1"></div>
+      <div class="field"><label>סוג אבנות</label>
+        <div class="toggle-group cols-2">
+          <button class="toggle-btn active" id="brShapeR" onclick="setT('brShape','round','brShapeR','brShapeF')">עגולות</button>
+          <button class="toggle-btn" id="brShapeF"        onclick="setT('brShape','fancy','brShapeR','brShapeF')">פנטזי</button>
+        </div></div>
+    </div>
+  </div>
+
+  <!-- NECKLACE -->
+  <div id="secNecklace" class="hidden">
+    <div class="card">
+      <div class="section-tag">פרטי שרשרת יהלום</div>
+      <div class="field"><label>קראט אבן</label>
+        <input type="number" id="nkCarat" placeholder="0.00" min="0" step="0.01" oninput="onNkCaratChange()"></div>
+      <div class="field hidden" id="fieldNkIGI">
+        <label>תעודת IGI</label>
+        <div class="toggle-group cols-2">
+          <button class="toggle-btn active" id="nkIgiY" onclick="setT('nkIGI','yes','nkIgiY','nkIgiN')">עם IGI</button>
+          <button class="toggle-btn" id="nkIgiN"        onclick="setT('nkIGI','no','nkIgiY','nkIgiN')">בלי IGI</button>
+        </div>
+      </div>
+      <div class="field"><label>סוג שיבוץ</label>
+        <div class="toggle-group cols-2">
+          <button class="toggle-btn active" id="nkSetR" onclick="setT('nkSet','regular','nkSetR','nkSetS')">רגיל</button>
+          <button class="toggle-btn" id="nkSetS"        onclick="setT('nkSet','smear','nkSetR','nkSetS')">מריחה</button>
+        </div></div>
+    </div>
+  </div>
+
+  <!-- COLLIER -->
+  <div id="secCollier" class="hidden">
+    <div class="card">
+      <div class="section-tag">פרטי קולייר יהלומים</div>
+      <div class="field"><label>משקל הקולייר (גרם)</label>
+        <input type="number" id="colGrams" placeholder="0" min="0" step="0.1"></div>
+      <div class="field"><label>קראט יהלומים סה"כ</label>
+        <input type="number" id="colCarat" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="field"><label>מספר אבנות</label>
+        <input type="number" id="colCount" placeholder="0" min="0" step="1"></div>
+      <div class="field"><label>סוג אבנות</label>
+        <div class="toggle-group cols-2">
+          <button class="toggle-btn active" id="colShapeR" onclick="setT('colShape','round','colShapeR','colShapeF')">עגולות</button>
+          <button class="toggle-btn" id="colShapeF"        onclick="setT('colShape','fancy','colShapeR','colShapeF')">פנטזי</button>
+        </div></div>
+    </div>
+  </div>
+
+  <button class="btn-calc" id="btnCalc" style="display:none" onclick="calculate()">חישוב מחיר ללקוח</button>
+  <div class="error-msg" id="errorMsg">נא למלא את כל השדות</div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-header">סיכום הזמנה &middot; קדם תכשיטים</div>
+    <div id="resultLines"></div>
+    <div class="total-block">
+      <div class="total-label">מחיר ללקוח כולל מע"מ</div>
+      <div class="total-amount" id="rTotal">—</div>
+      <div class="total-sub">שקלים ישראלים &middot; שע"ח &#8362;<span id="rRateUsed">—</span></div>
+    </div>
+  </div>
+
+</main>
+<footer class="page-footer">קדם תכשיטים &middot; נתיבות &middot; כל הזכויות שמורות</footer>
+
+<script>
+// ══ HIDDEN PRICING ══
+const GOLD_PER_GRAM        = 350;
+const CENTER_LOW_USD       = 130;  // up to 3ct
+const CENTER_HIGH_USD      = 140;  // 4ct+
+const SIDE_ROUND_USD       = 60;
+const SIDE_FANCY_USD       = 105;
+const SET_CENTER_USD       = 8;
+const SET_SIDE_ROUND_USD   = 1;
+const SET_SIDE_FANCY_USD   = 3;
+const SET_ROW_ROUND_USD    = 3;
+const SET_ROW_FANCY_USD    = 5;
+const SET_TENNIS_ROUND_USD = 2;
+const SET_TENNIS_FANCY_USD = 4;
+const SET_NK_REG_USD       = 8;
+const SET_NK_SMEAR_USD     = 15;
+const EARRING_RHODIUM_ILS  = 50;
+const VAT                  = 0.18;
+const FIXED_ADD_ILS        = 400;
+
+let usdRate  = 2.96;
+let jewelry  = null;
+let ringType = null;
+const T = { sideShape:'round', rowShape:'round', brShape:'round', nkSet:'regular', colShape:'round', earIGI:'yes', nkIGI:'yes' };
+
+function setT(key, val, idA, idB) {
+  T[key] = val;
+  document.getElementById(idA).classList.toggle('active', val === (idA.slice(-1) === 'R' || idA.slice(-7) === 'Regular' ? (idA.endsWith('R') ? 'round' : 'regular') : 'fancy'));
+  // simpler: just toggle both
+  var btnA = document.getElementById(idA), btnB = document.getElementById(idB);
+  var valA = idA.endsWith('R') || idA.endsWith('Regular') || idA.endsWith('r') ? (key === 'nkSet' ? 'regular' : 'round') : 'fancy';
+  btnA.classList.toggle('active', val === valA);
+  btnB.classList.toggle('active', val !== valA);
+}
+
+function onEarCaratChange() {
+  var ct = parseFloat(document.getElementById('earCarat').value);
+  var f = document.getElementById('fieldIGI');
+  if (!isNaN(ct) && ct <= 1) { f.classList.remove('hidden'); }
+  else { f.classList.add('hidden'); T.earIGI='yes'; document.getElementById('earIgiY').classList.add('active'); document.getElementById('earIgiN').classList.remove('active'); }
+}
+
+function onNkCaratChange() {
+  var ct = parseFloat(document.getElementById('nkCarat').value);
+  var f = document.getElementById('fieldNkIGI');
+  if (!isNaN(ct) && ct <= 1) { f.classList.remove('hidden'); }
+  else { f.classList.add('hidden'); T.nkIGI='yes'; document.getElementById('nkIgiY').classList.add('active'); document.getElementById('nkIgiN').classList.remove('active'); }
+}
+
+// Fetch USD/ILS from Bank of Israel, cached daily
+async function fetchRate() {
+  const badge = document.getElementById('rateBadge');
+  const today = new Date().toISOString().slice(0,10);
+  const CK = 'kedem_usd_v4';
+  try {
+    const cached = JSON.parse(localStorage.getItem(CK)||'null');
+    if (cached && cached.date === today && cached.rate) {
+      usdRate=cached.rate;
+      badge.textContent='₪'+usdRate.toFixed(3);
+      return;
+    }
+  } catch(e){}
+  badge.textContent = 'מתעדכן...';
+  // Try multiple CORS-friendly APIs
+  const apis = [
+    async () => {
+      const d = await (await fetch('https://api.frankfurter.app/latest?from=USD&to=ILS')).json();
+      if(d.rates&&d.rates.ILS) return d.rates.ILS;
+    },
+    async () => {
+      const d = await (await fetch('https://open.er-api.com/v6/latest/USD')).json();
+      if(d.rates&&d.rates.ILS) return d.rates.ILS;
+    },
+    async () => {
+      const d = await (await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')).json();
+      if(d.usd&&d.usd.ils) return d.usd.ils;
+    }
+  ];
+  for (const api of apis) {
+    try {
+      const rate = await api();
+      if (rate && !isNaN(rate)) {
+        usdRate = parseFloat(rate);
+        localStorage.setItem(CK, JSON.stringify({date:today, rate:usdRate}));
+        badge.textContent = '₪'+usdRate.toFixed(3);
+        return;
+      }
+    } catch(e){}
+  }
+  badge.textContent='₪'+usdRate.toFixed(3)+' (ברירת מחדל)';
+}
+fetchRate(); setInterval(fetchRate,600000);
+
+function H(id){document.getElementById(id).classList.add('hidden')}
+function S(id){document.getElementById(id).classList.remove('hidden')}
+
+function selectType(type, btn) {
+  jewelry=type; ringType=null;
+  document.querySelectorAll('#stepType .toggle-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['secRing','secRingSol','secRingSolSide','secRingRow','secEarrings','secBracelet','secNecklace','secCollier'].forEach(H);
+  document.getElementById('resultCard').classList.remove('show'); document.getElementById('btnCalc').style.display='none';
+  document.getElementById('errorMsg').classList.remove('show');
+  if(type==='ring')     {S('secRing');}
+  if(type==='earrings') {S('secEarrings');document.getElementById('btnCalc').style.display='block';}
+  if(type==='bracelet') {S('secBracelet');document.getElementById('btnCalc').style.display='block';}
+  if(type==='necklace') {S('secNecklace');document.getElementById('btnCalc').style.display='block';}
+  if(type==='collier')  {S('secCollier');document.getElementById('btnCalc').style.display='block';}
+}
+
+function selectRingType(type, btn) {
+  ringType=type;
+  document.querySelectorAll('#secRing>.card .toggle-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['secRingSol','secRingSolSide','secRingRow'].forEach(H); document.getElementById('btnCalc').style.display='none';
+  if(type==='solitaire')      {S('secRingSol');document.getElementById('btnCalc').style.display='block';}
+  if(type==='solitaire_side') {S('secRingSolSide');document.getElementById('btnCalc').style.display='block';}
+  if(type==='row')            {S('secRingRow');document.getElementById('btnCalc').style.display='block';}
+}
+
+function g(id){return document.getElementById(id).value;}
+function pf(id){return parseFloat(g(id));}
+function pi(id){return parseInt(g(id));}
+function usd(x){return x*usdRate;}
+function cPriceUSD(ct){return ct>=4?CENTER_HIGH_USD:CENTER_LOW_USD;}
+function fILS(n){return '₪'+Math.round(n).toLocaleString('he-IL');}
+
+function ringGold(size, carat) {
+  var base = size<=53 ? 2.5 : (size<=56 ? 2.8 : 3.5);
+  return base + Math.max(0, carat-1)*0.5;
+}
+function rowGold(carat) {
+  if(carat<=1) return 2.8;
+  if(carat<=2) return 3.5;
+  if(carat<=3) return 4.5;
+  return 4.5 + Math.ceil(carat-3);
+}
+function nkGold(carat) {
+  // 1ct=2.4g, each +0.5ct adds +0.5g
+  return 2.4 + Math.max(0,(carat-1)/0.5)*0.5;
+}
+
+function addLine(lines,label,val){lines.push({label,val});}
+
+function calculate() {
+  var err=document.getElementById('errorMsg');
+  err.classList.remove('show');
+  var cost=0, lines=[];
+  try {
+    if(jewelry==='ring') {
+      if(ringType==='solitaire') {
+        var ct=pf('rsSolCarat'), sz=pf('rsSolSize');
+        if(isNaN(ct)||isNaN(sz)) throw 0;
+        var gr=ringGold(sz,ct);
+        var gC=gr*GOLD_PER_GRAM, stC=ct*cPriceUSD(ct)*usdRate, seC=usd(SET_CENTER_USD);
+        cost=gC+stC+seC;
+        addLine(lines,'זהב '+gr.toFixed(1)+' גרם',fILS(gC));
+        addLine(lines,'יהלום מרכזי '+ct+' קראט',fILS(stC));
+        addLine(lines,'שיבוץ מרכזי',fILS(seC));
+      } else if(ringType==='solitaire_side') {
+        var ct=pf('rsSolSideCarat'), sz=pf('rsSolSideSize');
+        var sCt=pf('rsSolSideSideCarat'), sCo=pi('rsSolSideSideCount');
+        if([ct,sz,sCt,sCo].some(v=>isNaN(v))) throw 0;
+        var sh=T.sideShape, gr=ringGold(sz,ct);
+        var gC=gr*GOLD_PER_GRAM, stC=ct*cPriceUSD(ct)*usdRate, seC=usd(SET_CENTER_USD);
+        var sdC=sCt*(sh==='fancy'?SIDE_FANCY_USD:SIDE_ROUND_USD)*usdRate;
+        var sdSeC=sCo*usd(sh==='fancy'?SET_SIDE_FANCY_USD:SET_SIDE_ROUND_USD);
+        cost=gC+stC+seC+sdC+sdSeC;
+        addLine(lines,'זהב '+gr.toFixed(1)+' גרם',fILS(gC));
+        addLine(lines,'יהלום מרכזי '+ct+' קראט',fILS(stC));
+        addLine(lines,'שיבוץ מרכזי',fILS(seC));
+        addLine(lines,'שיבוצי צד '+sCt+' קראט · '+(sh==='fancy'?'פנטזי':'עגולות'),fILS(sdC));
+        addLine(lines,'שיבוץ '+sCo+' אבני צד',fILS(sdSeC));
+      } else if(ringType==='row') {
+        var ct=pf('rsRowCarat'), co=pi('rsRowCount'), sz=pf('rsRowSize');
+        if(isNaN(ct)||isNaN(co)||isNaN(sz)) throw 0;
+        var sh=T.rowShape, gr=ringGold(sz,ct);
+        var gC=gr*GOLD_PER_GRAM;
+        var stC=ct*(sh==='fancy'?SIDE_FANCY_USD:SIDE_ROUND_USD)*usdRate;
+        var seC=co*usd(sh==='fancy'?SET_ROW_FANCY_USD:SET_ROW_ROUND_USD);
+        cost=gC+stC+seC;
+        addLine(lines,'זהב '+gr.toFixed(1)+' גרם',fILS(gC));
+        addLine(lines,ct+' קראט · '+co+' אבנות · '+(sh==='fancy'?'פנטזי':'עגולות'),fILS(stC));
+        addLine(lines,'שיבוץ '+co+' אבנות',fILS(seC));
+      } else throw 0;
+    } else if(jewelry==='earrings') {
+      var ct=pf('earCarat');
+      if(isNaN(ct)) throw 0;
+      var gr=ct<=2?1.5:2.5;
+      // Price per carat: IGI uses standard, no-IGI uses cheaper prices
+      var earPriceUSD;
+      if(ct<=1 && T.earIGI==='no') {
+        earPriceUSD = (ct>=0.5 && ct<=0.75) ? 75 : 85;
+      } else {
+        earPriceUSD = cPriceUSD(ct);
+      }
+      var gC=gr*GOLD_PER_GRAM, stC=2*ct*earPriceUSD*usdRate;
+      var seC=2*usd(SET_CENTER_USD), rh=EARRING_RHODIUM_ILS;
+      cost=gC+stC+seC;
+      addLine(lines,'זהב '+gr+' גרם (זוג)',fILS(gC));
+      addLine(lines,'2 יהלומים × '+ct+' קראט',fILS(stC));
+      addLine(lines,'שיבוץ 2 אבנות',fILS(seC));
+      addLine(lines,'רודיום',fILS(rh));
+    } else if(jewelry==='bracelet') {
+      var gr=pf('brGrams'), ct=pf('brCarat'), co=pi('brCount');
+      if([gr,ct,co].some(v=>isNaN(v))) throw 0;
+      var sh=T.brShape;
+      var gC=gr*GOLD_PER_GRAM, stC=ct*(sh==='fancy'?SIDE_FANCY_USD:SIDE_ROUND_USD)*usdRate;
+      var seC=co*usd(sh==='fancy'?SET_TENNIS_FANCY_USD:SET_TENNIS_ROUND_USD);
+      cost=gC+stC+seC;
+      addLine(lines,'זהב '+gr+' גרם',fILS(gC));
+      addLine(lines,ct+' קראט · '+co+' אבנות · '+(sh==='fancy'?'פנטזי':'עגולות'),fILS(stC));
+      addLine(lines,'שיבוץ '+co+' אבנות',fILS(seC));
+    } else if(jewelry==='necklace') {
+      var ct=pf('nkCarat');
+      if(isNaN(ct)) throw 0;
+      var st=T.nkSet, gr=nkGold(ct);
+      var nkPriceUSD;
+      if(ct<=1 && T.nkIGI==='no') {
+        nkPriceUSD = (ct>=0.5 && ct<=0.75) ? 75 : 85;
+      } else {
+        nkPriceUSD = cPriceUSD(ct);
+      }
+      var gC=gr*GOLD_PER_GRAM, stC=ct*nkPriceUSD*usdRate;
+      var seC=usd(st==='smear'?SET_NK_SMEAR_USD:SET_NK_REG_USD);
+      cost=gC+stC+seC;
+      addLine(lines,'זהב '+gr.toFixed(1)+' גרם',fILS(gC));
+      addLine(lines,'יהלום '+ct+' קראט',fILS(stC));
+      addLine(lines,'שיבוץ '+(st==='smear'?'מריחה':'רגיל'),fILS(seC));
+    } else if(jewelry==='collier') {
+      var gr=pf('colGrams'), ct=pf('colCarat'), co=pi('colCount');
+      if([gr,ct,co].some(v=>isNaN(v))) throw 0;
+      var sh=T.colShape;
+      var gC=gr*GOLD_PER_GRAM, stC=ct*(sh==='fancy'?SIDE_FANCY_USD:SIDE_ROUND_USD)*usdRate;
+      var seC=co*usd(sh==='fancy'?SET_TENNIS_FANCY_USD:SET_TENNIS_ROUND_USD);
+      cost=gC+stC+seC;
+      addLine(lines,'זהב '+gr+' גרם',fILS(gC));
+      addLine(lines,ct+' קראט · '+co+' אבנות · '+(sh==='fancy'?'פנטזי':'עגולות'),fILS(stC));
+      addLine(lines,'שיבוץ '+co+' אבנות',fILS(seC));
+    } else throw 0;
+  } catch(e){ console.error('Calc error:',e); err.classList.add('show'); return; }
+
+  // ((cost + 100) / 0.6 * 1.18) + 400
+  var beforeVat = (cost + 100) / 0.6;
+  var rhodium   = (jewelry==='earrings') ? EARRING_RHODIUM_ILS : 0;
+  var final     = beforeVat*(1+VAT) + FIXED_ADD_ILS + rhodium;
+
+  document.getElementById('resultLines').innerHTML = '';
+  document.getElementById('rTotal').textContent    = fILS(final);
+  document.getElementById('rRateUsed').textContent = usdRate.toFixed(3);
+
+  var rc=document.getElementById('resultCard');
+  rc.classList.remove('hidden'); rc.classList.remove('show'); void rc.offsetWidth; rc.classList.add('show');
+}
+</script>
+</body>
+</html>
